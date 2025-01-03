@@ -1,3 +1,5 @@
+**The English introduction is placed below the Chinese version.**
+
 本项目基于selenium和PyQt5实现了一个淘宝商品自动筛选器，能够自动筛选价格区间，以及各种关键词的淘宝商品。  
 用户只需在软件中登录淘宝账号，设置搜索关键词和过滤选项（如退货宝、运费险等），即可便捷地将商品加入购物车，减少了用户手工一件件添加商品的负担。
 
@@ -44,4 +46,76 @@
 ## 如何构建项目
 
 在Windows中，首先启动`cmd.exe`，然后在当前目录运行`build_pyinstaller.bat`即可，会生成`build`和`dist`目录。  
-如果要用Inno Setup打包项目，则需要在Inno Script Studio打开`inno\安装包脚本.iss`，点击“项目” -> “编译”（或手动从命令行调用inno setup），生成本软件的安装包。  
+如果要用Inno Setup打包项目，则需要在Inno Script Studio打开`inno\setup.iss`，点击“项目” -> “编译”（或手动从命令行调用inno setup），生成本软件的安装包。  
+
+
+This project implements an automatic product filter for Taobao using selenium and PyQt5, enabling users to filter products by price range and various keywords automatically. Users can log in to their Taobao account through the software, set search keywords and filtering options (e.g., "7-Day Returns," "Shipping Insurance"), and conveniently add selected products to their cart, reducing the manual effort required for adding items one by one.  
+
+![](https://i-blog.csdnimg.cn/direct/16d00dfa333746c5abc6dcf3b2f407ae.png)
+
+## Usage Instructions
+
+#### Step 1: Add an Account  
+When you first run the software, click the "Add Account" button. After the software automatically downloads Edge driver, an Edge browser will be automatically opened.  
+Log in to the Taobao website inside the opened browser and close the browser, then the software will automatically save the login state for future use, including cookies and tokens.  
+If the account logs out unexpectedly, select the account from the list on the left and click "Re-login" to restore the login state.  
+
+#### Step 2: Search Products  
+Select the account you want to use from the list on the left, then enter the product search keywords and choose filtering options.  
+Click the "Search and Add to Cart" button to open a browser and perform a search. The software will automatically add products that meet the specified criteria from the current page of search results to the cart.  
+Success or failure messages will be logged in the "Log" section. If a product is added successfully, the software will close its detail page. If not, the detail page will remain open for manual addition.  
+After all items have been processed, close the browser. After some time, the software will sync the successfully added products to the list. Products added to the cart under different accounts will not overlap.  
+
+**Important Notes:**  
+1. If the account's search results are displayed in "List View" by default, switch to "Card View" for the software to operate correctly.  
+2. For products marked as sold out, requiring style selection, or other special situations, the software will not add them automatically and will leave the browser window open for manual handling.  
+
+**Filtering Options:**  
+- A white checkbox "☐" means the product must not meet the condition.  
+- A checked box "√" means the product must meet the condition.  
+- A filled box "■" (default) means the product may or may not meet the condition.  
+
+**Price:**  
+Enter the minimum and maximum prices in the two input fields. Prices are inclusive of the maximum and minimum values. If the checkbox is unchecked, the input prices will be ignored.  
+
+**Search Pages:**  
+This determines how many pages of search results the software will process. Typically, each page on Taobao contains 48 products.  
+
+**Maximum Products:**  
+This sets the maximum number of products to add to the cart in one operation. If the number of search pages is too small or the filtering range is too narrow, the actual number of products added may fall short of this value.  
+
+#### Step 3: Remove an Account  
+Select the account you want to remove from the list on the left, then click the "Remove Account" button. Confirm the action to delete the account's login state.  
+
+#### Step 4: Customize Product Filtering Conditions  
+Click the "Customize" button above the filtering options list to add custom filtering conditions. Ensure the conditions match the original text on the web page; otherwise, the software may fail to recognize them.  
+
+## Development Framework
+  The software is developed using Python with the **Selenium** library for automating Taobao web interactions and **PyQt5** for the graphical user interface.  
+  Additionally, the **requests** and **tqdm** libraries are used for downloading and displaying progress bars during EdgeDriver initialization.  
+
+## Runtime Environment
+  The software depends on the following libraries:  
+  ```bash
+  pip install selenium pyqt5 requests tqdm
+  ```  
+  After installation, run `main.py` to start the software.  
+
+  When launching the Edge browser for the first time, the software will automatically download the appropriate `msedgedriver.exe` for the installed Edge version and save it to the `driver` directory in the software's installation path. Manual Selenium environment setup is unnecessary.  
+
+  If the EdgeDriver becomes corrupted or fails due to Edge browser updates, delete the `driver` folder in the software installation path. The software will redownload it automatically.  
+
+  Configuration data, including login information, is saved in:  
+  ```
+  C:\Users\<username>\AppData\Roaming\taobao-auto-selector
+  ```  
+
+## How to Build
+
+Open `cmd.exe` on Windows, navigate to the current directory, and run:  
+```bash
+build_pyinstaller.bat
+```  
+This will generate the `build` and `dist` directories.  
+
+To package the project using Inno Setup, open `inno\setup.iss` in **Inno Script Studio**, then click "Project" -> "Compile" (or run Inno Setup from the command line) to create the installation package.  
